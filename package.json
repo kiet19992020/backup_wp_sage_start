@@ -1,0 +1,20 @@
+{
+  "name": "9thwonder",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "commander": "^2.20.0",
+    "inquirer": "^6.2.2"
+  },
+  "keywords": [
+    "9thwonder",
+    "command",
+    "shell"
+  ],
+  "preferGlobal": true,
+  "bin": {
+    "9thwonder": "index.js"
+  }
+}

@@ -1,0 +1,46 @@
+version: '2.1'
+services:
+  wordpress:
+    image: wordpress:latest
+    ports:
+      - 3333:80
+    environment:
+      WORDPRESS_DB_PASSWORD: wp-start
+      WORDPRESS_DB_NAME: wp-sage
+      WORDPRESS_TABLE_PREFIX: w9th_
+      WORDPRESS_DB_HOST: wordpress_db
+      WORDPRESS_CONFIG_EXTRA:
+        define( 'WP_SITEURL', 'http://localhost:3333' );
+        define( 'WP_HOME', 'http://localhost:3333' );
+        define('WP_THEME_ACTIVE', 'sage-theme');
+        define('DEV_URL', '');
+        define('DEV_STAGING', '');
+        define( 'CLONE_DB', 'db_wp_sage' ); # db name want to clone from dev server
+    volumes:
+      - ./:/var/www/html
+  wordpress_db:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: wp-start
+    volumes:
+      - wordpress-db-data:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - 5555:80
+    environment:
+      MYSQL_ROOT_PASSWORD: wp-start
+      PMA_HOST: wordpress_db
+  wp_cli:
+    image: bitroniq/docker-wordpress-cli-sage
+    volumes_from:
+      - wordpress
+    links:
+      - wordpress_db
+    depends_on:
+       wordpress:
+            condition: service_started
+    command: sh docker-entrypoint.sh #Note: Command/UnCommand this line if want to ignore/clone db when run docker
+volumes:
+    wordpress-db-data:
+      driver: local
